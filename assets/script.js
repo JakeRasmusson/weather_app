@@ -1,16 +1,16 @@
-const search = ['atlanta','burlington']
 const weather = []
+const searchedList = JSON.parse(localStorage.getItem('cities')) || []
 const weatherData = JSON.parse(localStorage.getItem('data')) || []
 const daysArray = [0,6,14,22,30,38]
-const dataParsed = []
 
 
-function parseData() {
-    weatherData.forEach((place) => {
-        const city = place.city.name
+function parseData(data) {
+        const dataParsed = []
+        const city = data.city.name
+        console.log('ava')
         const cityData = []
         daysArray.forEach((day) => {
-        const today = place.list[day]
+        const today = data.list[day]
         const todayTemp = convertKelvinToFarenheit(today.main.temp)
         const todayWind = today.wind.speed
         const todayHumidity = today.main.humidity
@@ -20,14 +20,11 @@ function parseData() {
         dataParsed.push({'city' : city, 'data': cityData})
     
         console.log(dataParsed)
-        
+        renderData(dataParsed)
     
-
-    })
-    renderData()
 }
 
-function renderData(){
+function renderData(dataParsed){
     const cityList = document.getElementById('list-tab')
     const cityContent = document.getElementById('nav-tabContent')
 
@@ -74,40 +71,65 @@ function renderData(){
 
 function saveToLocalStorage(data) {
     console.log('hello')
-    localStorage.setItem('data' , JSON.stringify(data))
+    localStorage.setItem('cities' , JSON.stringify(data))
 
 }
 
-function geoLocate() {
-    search.forEach((city) => {
+function geoLocate(city) {
         fetch( `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
             return response.json();
         })
         .then(function (data){
             const longLat = {lat: data[0].lat , lon: data[0].lon}
-            console.log(longLat)
             getWeather(longLat)
         })
-
-    })
+        .catch(function (){
+            alert('Invalid City')
+        })
 
 }
+
 function getWeather(longLat) {
     fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${longLat.lat}&lon=${longLat.lon}&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
             return response.json()
         })
         .then(function (data){
-            weather.push(data)
-            saveToLocalStorage(weather)
+            parseData(data)
+            console.log(weather)
         })
 }
 
+function handleForm(e) {
+    e.preventDefault()
+    const city = document.getElementById('searchInput').value;
+    searchedList.push(city)
+    saveToLocalStorage(searchedList)
+    geoLocate(city)
+
+    // console.log(city)
+    // console.log(e)
+}
+
+function refreshSearchedCities() {
+    console.log(searchedList)
+    searchedList.forEach((city) => {
+        geoLocate(city)
+    })
+
+}
 
 function convertKelvinToFarenheit(kelvin) {
     const farenheit = Math.ceil((kelvin - 273.15) * (9/5) +32)
     return farenheit
-    console.log(farenheit)
+    // console.log(farenheit)
 }
-parseData()
+
+function init() {
+    const form = document.getElementById('search-bar')
+    form.addEventListener('submit', handleForm);
+    refreshSearchedCities()
+}
+
+init()
