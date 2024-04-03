@@ -1,10 +1,29 @@
-const weather = []
+// const weather = []
 const searchedList = JSON.parse(localStorage.getItem('cities')) || []
 const weatherData = JSON.parse(localStorage.getItem('data')) || []
-const daysArray = [0,6,14,22,30,38]
+// const daysArray = [0,6,14,22,30,38]
 
+function selectDays(data) {
+    const daysArray = []
+    const weather = []
 
-function parseData(data) {
+for (let i = 0; i < object.list.length; i++) {
+    const current = object.list[i]
+    const date = current.dt_txt.split(' ')[0]
+    if (daysArray.includes(date)) {
+        continue
+    } else {
+        daysArray.push(date)
+        weather.push(current)
+        
+
+    }
+    
+    parseData(data, daysArray)
+}
+
+}
+function parseData(data, daysArray) {
         console.log(data)
         const dataParsed = []
         const city = data.city.name
@@ -39,7 +58,7 @@ function renderData(dataParsed){
     const a = document.createElement('a')
     const div = document.createElement('div')
     const cardDiv = document.createElement('div')
-    a.innerHTML = `<a class="list-group-item list-group-item-action" id="${id}-tab" data-toggle="list" href="#${id}" role="tab" aria-selected="false">${i.city}</a>`
+    a.innerHTML = `<a class="list-group-item list-group-item-action" id="${id}" href="#${id}">${i.city}</a>`
     div.classList.add('tab-pane', 'fade')
     cardDiv.classList.add('row')
     div.setAttribute('id',`${id}`)
@@ -99,7 +118,7 @@ function getWeather(longLat) {
             return response.json()
         })
         .then(function (data){
-            parseData(data)
+            selectDays(data)
             console.log(weather)
         })
 }
@@ -133,6 +152,7 @@ function init() {
     const form = document.getElementById('search-bar')
     form.addEventListener('submit', handleForm);
     refreshSearchedCities()
+    //todo event listener / event handling for buttons and make it refresh weather info
 }
 
 init()
