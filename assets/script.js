@@ -5,12 +5,14 @@ const daysArray = [0,6,14,22,30,38]
 
 
 function parseData(data) {
+        console.log(data)
         const dataParsed = []
         const city = data.city.name
         console.log('ava')
         const cityData = []
         daysArray.forEach((day) => {
         const today = data.list[day]
+        // const todaysDate = today[dt];
         const todayTemp = convertKelvinToFarenheit(today.main.temp)
         const todayWind = today.wind.speed
         const todayHumidity = today.main.humidity
@@ -30,15 +32,17 @@ function renderData(dataParsed){
 
     dataParsed.forEach((i) => {
     const dataArray = i.data
+    const city = i.city
+    const id = city.replace(/\s/g, '')
     console.log(dataArray)
     console.log('hello')
     const a = document.createElement('a')
     const div = document.createElement('div')
     const cardDiv = document.createElement('div')
-    a.innerHTML = `<a class="list-group-item list-group-item-action" id="${i.city}-tab" data-toggle="list" href="#${i.city}" role="tab" aria-selected="false">${i.city}</a>`
+    a.innerHTML = `<a class="list-group-item list-group-item-action" id="${id}-tab" data-toggle="list" href="#${id}" role="tab" aria-selected="false">${i.city}</a>`
     div.classList.add('tab-pane', 'fade')
     cardDiv.classList.add('row')
-    div.setAttribute('id',`${i.city}`)
+    div.setAttribute('id',`${id}`)
     div.innerHTML = 
     `<h3>${i.city}</h3>
     <p>Current weather for ${i.city}</p>
@@ -57,7 +61,6 @@ function renderData(dataParsed){
         <p>Forecasted wind: ${current.wind}</p>
         `
         cardDiv.appendChild(cards)
-        console.log(current)
     }
     cityList.appendChild(a)
     cityContent.appendChild(div)
