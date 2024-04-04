@@ -4,38 +4,40 @@ const weatherData = JSON.parse(localStorage.getItem('data')) || []
 // const daysArray = [0,6,14,22,30,38]
 
 function selectDays(data) {
+    console.log(data)
     const daysArray = []
     const weather = []
+    const city = data.city.name
 
-for (let i = 0; i < object.list.length; i++) {
-    const current = object.list[i]
+for (let i = 0; i < data.list.length; i++) {
+    const current = data.list[i]
     const date = current.dt_txt.split(' ')[0]
     if (daysArray.includes(date)) {
+        console.log('phil')
         continue
     } else {
+        console.log('ava')
         daysArray.push(date)
         weather.push(current)
-        
 
     }
-    
-    parseData(data, daysArray)
-}
 
 }
-function parseData(data, daysArray) {
-        console.log(data)
+    console.log(daysArray)
+    parseData(weather,city)
+}
+function parseData(weather, city) {
+        console.log(weather)
         const dataParsed = []
-        const city = data.city.name
-        console.log('ava')
+        // const city = city
+        console.log('Eloise')
         const cityData = []
-        daysArray.forEach((day) => {
-        const today = data.list[day]
-        // const todaysDate = today[dt];
-        const todayTemp = convertKelvinToFarenheit(today.main.temp)
-        const todayWind = today.wind.speed
-        const todayHumidity = today.main.humidity
-        cityData.push({'temp':todayTemp , 'wind': todayWind, 'humidity': todayHumidity})
+        weather.forEach((day) => {
+        const today = day.dt_txt.split(' ')[0]
+        const todayTemp = convertKelvinToFarenheit(day.main.temp)
+        const todayWind = day.wind.speed
+        const todayHumidity = day.main.humidity
+        cityData.push({'temp':todayTemp , 'wind': todayWind, 'humidity': todayHumidity, 'date': today})
     })
     
         dataParsed.push({'city' : city, 'data': cityData})
@@ -58,8 +60,8 @@ function renderData(dataParsed){
     const a = document.createElement('a')
     const div = document.createElement('div')
     const cardDiv = document.createElement('div')
-    a.innerHTML = `<a class="list-group-item list-group-item-action" id="${id}" href="#${id}">${i.city}</a>`
-    div.classList.add('tab-pane', 'fade')
+    a.innerHTML = `<a class="list-group-item list-group-item-action" href="#${id}">${i.city}</a>`
+    // div.classList.add('tab-pane', 'fade')
     cardDiv.classList.add('row')
     div.setAttribute('id',`${id}`)
     div.innerHTML = 
@@ -71,13 +73,14 @@ function renderData(dataParsed){
     `
     for (let i=1; i < dataArray.length; i++) {
         const current = dataArray[i]
+        const todaysDate = current.date.split('2024-')[1]
         const cards = document.createElement('div')
         cards.classList.add('col-sm-2' , 'sub-box')
         cards.innerHTML = 
-        `<h3>Date</h3>
-        <p>Forecasted Temp: ${current.temp}</p>
-        <p>Forecasted humidity: ${current.humidity}</p>
-        <p>Forecasted wind: ${current.wind}</p>
+        `<h3>${todaysDate}</h3>
+        <p>Temp: ${current.temp}</p>
+        <p>Humidity: ${current.humidity}</p>
+        <p>Wind Speed: ${current.wind}</p>
         `
         cardDiv.appendChild(cards)
     }
@@ -100,14 +103,14 @@ function saveToLocalStorage(data) {
 function geoLocate(city) {
         fetch( `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
+            if (!response.ok) {
+                showError(`Error fetching coordinates ${response.status}`)
+            }
             return response.json();
         })
         .then(function (data){
             const longLat = {lat: data[0].lat , lon: data[0].lon}
             getWeather(longLat)
-        })
-        .catch(function (){
-            alert('Invalid City')
         })
 
 }
@@ -115,21 +118,29 @@ function geoLocate(city) {
 function getWeather(longLat) {
     fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${longLat.lat}&lon=${longLat.lon}&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
+            if (!response.ok) {
+                showError(`Error fetching weather ${response.status}`)}
+
             return response.json()
         })
         .then(function (data){
             selectDays(data)
-            console.log(weather)
+        })
+        .catch(function () {
+            alert('No response')
         })
 }
 
 function handleForm(e) {
     e.preventDefault()
     const city = document.getElementById('searchInput').value;
+    if (city == ''){
+        alert('Please complete field')
+    } else {
     searchedList.push(city)
     saveToLocalStorage(searchedList)
     geoLocate(city)
-
+    }
     // console.log(city)
     // console.log(e)
 }
@@ -150,6 +161,8 @@ function convertKelvinToFarenheit(kelvin) {
 
 function init() {
     const form = document.getElementById('search-bar')
+    // const listDiv = document.querySelector('.')
+
     form.addEventListener('submit', handleForm);
     refreshSearchedCities()
     //todo event listener / event handling for buttons and make it refresh weather info
