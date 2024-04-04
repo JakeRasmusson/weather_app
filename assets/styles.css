@@ -1,0 +1,7 @@
+.weatherContent {
+    display: none;
+}
+
+.weatherContentActive {
+    display:block
+}

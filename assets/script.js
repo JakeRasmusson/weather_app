@@ -36,8 +36,9 @@ function parseData(weather, city) {
         const today = day.dt_txt.split(' ')[0]
         const todayTemp = convertKelvinToFarenheit(day.main.temp)
         const todayWind = day.wind.speed
+        const todayIcon = day.weather[0].icon
         const todayHumidity = day.main.humidity
-        cityData.push({'temp':todayTemp , 'wind': todayWind, 'humidity': todayHumidity, 'date': today})
+        cityData.push({'temp':todayTemp , 'wind': todayWind, 'humidity': todayHumidity, 'date': today, 'icon': todayIcon})
     })
     
         dataParsed.push({'city' : city, 'data': cityData})
@@ -63,10 +64,12 @@ function renderData(dataParsed){
     a.innerHTML = `<a class="list-group-item list-group-item-action" href="#${id}">${i.city}</a>`
     // div.classList.add('tab-pane', 'fade')
     cardDiv.classList.add('row')
+    div.classList.add('weatherContent')
     div.setAttribute('id',`${id}`)
     div.innerHTML = 
     `<h3>${i.city}</h3>
     <p>Current weather for ${i.city}</p>
+    <img src=https://openweathermap.org/img/wn/${dataArray[0].icon}@2x.png>
     <p>Current temp: ${dataArray[0].temp}</p>
     <p>Current humidity: ${dataArray[0].humidity}</p>
     <p>Current wind: ${dataArray[0].wind}</p>
@@ -78,6 +81,7 @@ function renderData(dataParsed){
         cards.classList.add('col-sm-2' , 'sub-box')
         cards.innerHTML = 
         `<h3>${todaysDate}</h3>
+        <img src=https://openweathermap.org/img/wn/${current.icon}@2x.png>
         <p>Temp: ${current.temp}</p>
         <p>Humidity: ${current.humidity}</p>
         <p>Wind Speed: ${current.wind}</p>
@@ -93,6 +97,26 @@ function renderData(dataParsed){
     console.log(cityList)
 }
 
+function displayActiveWeather(event) {
+    const target = event.target
+    const weatherTarget = target.href.split('#')[1]
+    const content = document.querySelectorAll('.weatherContent')
+    for (let i = 0; i < content.length; i++) {
+        const currentDiv = content[i]
+        const currentId = currentDiv.id
+        console.log(currentId)
+        if (weatherTarget == currentId) {
+            currentDiv.classList.add('weatherContentActive')
+        } else {
+            currentDiv.classList.remove('weatherContentActive')
+        }
+    }
+    console.log(content)
+
+    console.log(target)
+    console.log(weatherTarget)
+
+}
 
 function saveToLocalStorage(data) {
     console.log('hello')
@@ -161,10 +185,15 @@ function convertKelvinToFarenheit(kelvin) {
 
 function init() {
     const form = document.getElementById('search-bar')
-    // const listDiv = document.querySelector('.')
+    const listDiv = document.getElementById('list-tab')
+    console.log(listDiv)
+    listDiv.addEventListener('click', function(e) {
+        displayActiveWeather(e)
+    });
 
     form.addEventListener('submit', handleForm);
     refreshSearchedCities()
+
     //todo event listener / event handling for buttons and make it refresh weather info
 }
 
