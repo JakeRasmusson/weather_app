@@ -3,5 +3,21 @@
 }
 
 .weatherContentActive {
-    display:block
+    display:block;
+
+}
+
+.current-date{
+    margin-bottom: 55px;
+    text-align: center;
+    border: 2px solid blue;
+}
+
+.cards{
+    justify-content: space-around;
+}
+
+.sub-box{
+    background-color: lightgray;
+    border: 1px solid grey;
 }

@@ -63,22 +63,24 @@ function renderData(dataParsed){
     const cardDiv = document.createElement('div')
     a.innerHTML = `<a class="list-group-item list-group-item-action" href="#${id}">${i.city}</a>`
     // div.classList.add('tab-pane', 'fade')
-    cardDiv.classList.add('row')
+    cardDiv.classList.add('row' ,'cards')
     div.classList.add('weatherContent')
     div.setAttribute('id',`${id}`)
     div.innerHTML = 
-    `<h3>${i.city}</h3>
+    `<div class='current-date'>
+    <h3>${i.city}</h3>
     <p>Current weather for ${i.city}</p>
     <img src=https://openweathermap.org/img/wn/${dataArray[0].icon}@2x.png>
     <p>Current temp: ${dataArray[0].temp}</p>
     <p>Current humidity: ${dataArray[0].humidity}</p>
     <p>Current wind: ${dataArray[0].wind}</p>
+    </div>
     `
     for (let i=1; i < dataArray.length; i++) {
         const current = dataArray[i]
         const todaysDate = current.date.split('2024-')[1]
         const cards = document.createElement('div')
-        cards.classList.add('col-sm-2' , 'sub-box')
+        cards.classList.add('col-md-2' , 'sub-box')
         cards.innerHTML = 
         `<h3>${todaysDate}</h3>
         <img src=https://openweathermap.org/img/wn/${current.icon}@2x.png>
