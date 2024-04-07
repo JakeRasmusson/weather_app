@@ -106,7 +106,7 @@ function saveToLocalStorage(data) {
 }
 
 function geoLocate(city) {
-    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
+    fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
             if (!response.ok) {
                 showError(`Error fetching coordinates ${response.status}`)
@@ -121,7 +121,7 @@ function geoLocate(city) {
 }
 
 function getWeather(longLat) {
-    fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${longLat.lat}&lon=${longLat.lon}&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${longLat.lat}&lon=${longLat.lon}&appid=1775f1bc95aa54cad4ba6fd9830d3d95`)
         .then(function (response) {
             if (!response.ok) {
                 showError(`Error fetching weather ${response.status}`)
