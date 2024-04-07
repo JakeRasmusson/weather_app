@@ -4,7 +4,7 @@
 
 The goal of this project was to create a weather dashboard.  The dashboard is there to be a hub for all of my local weather needs.  When I add a city to the dashboard it is saved in local storage and is refreshed so I get upto date weather.
 
-[Link to deployed Github website](https://jakerasmusson.github.io/task_board/)
+[Link to deployed Github website](https://jakerasmusson.github.io/weather_app/)
 
 ## Built With
 
@@ -15,9 +15,6 @@ The goal of this project was to create a weather dashboard.  The dashboard is th
 [Open Weather Geolocate API](https://openweathermap.org/api/geocoding-api)
 
 [Bootstrap](https://getbootstrap.com/)
-
-
-
 
 
 ## Installation
@@ -40,14 +37,10 @@ Website with cities list populated
 
 ![City list populated](/assets/Images/cities_list_populated.png)
 
-Displaying the tasks on the board
+Website displaying weather information for selected city.
 
-![Task on the board](/assets/Images/tasksonboard.png)
+![Weather Data Displayed](/assets/Images/website_displaying_weather.png)
 
 ## Credits
-
-Below I have the Repository that provided the source code.
-
-[Starter code](https://github.com/coding-boot-camp/musical-happiness)
 
 Shout out to Josh Nailor for teaching me the skills in this repo.
